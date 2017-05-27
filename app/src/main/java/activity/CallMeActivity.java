@@ -29,6 +29,10 @@ public class CallMeActivity extends HBaseActivity {
     @Override
     public void findViews() {
         Log.d("Helen","111");
+
+
+
+
         lv = (ListView) contentView.findViewById(R.id.call_me_listview);
         adapterCallMe = new AdapterCallMe(this);
         lv.setAdapter(adapterCallMe);
