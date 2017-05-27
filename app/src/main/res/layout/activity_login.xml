@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/recommend_bg_liked" />
+
+    <ImageView
+        android:id="@+id/login_close"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/abc_ic_clear_mtrl_alpha" />
+
+
+    <LinearLayout
+        android:id="@+id/login_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/login_iphone"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="8dp"
+            android:layout_margin="10dp"
+            android:src="@mipmap/invite_contact_friend_icon" />
+
+        <ImageView
+            android:id="@+id/sina"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+
+            android:src="@mipmap/ic_account_login_weibo" />
+
+        <ImageView
+            android:id="@+id/weixin"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:src="@mipmap/ic_account_login_wechat" />
+
+        <ImageView
+            android:id="@+id/qq"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:src="@mipmap/ic_account_login_qq" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_ll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:text="登录即可享受更多功能"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:background="#60000000"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="登录或注册即同意考勤"
+                android:textColor="#fff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="用户服务协议"
+                android:textColor="#fff" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
