@@ -36,6 +36,18 @@ public class UserBean {
     private int isCheck;
     private String isThreeLogin;
 
+
+    public String getUserHead() {
+        return userHead;
+    }
+
+    public void setUserHead(String userHead) {
+        this.userHead = userHead;
+    }
+
+    private String userHead;
+
+
     public int getUserCode() {
         return userCode;
     }

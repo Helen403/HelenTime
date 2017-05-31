@@ -82,9 +82,9 @@ public class AudioRecoderUtils {
             updateMicStatus();
             Log.e("fan", "startTime" + startTime);
         } catch (IllegalStateException e) {
-            Log.i(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
+            Log.i(TAG, "call startAmr( mRecAudioFile) failed!" + e.getMessage());
         } catch (IOException e) {
-            Log.i(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
+            Log.i(TAG, "call startAmr( mRecAudioFile) failed!" + e.getMessage());
         }
     }
 

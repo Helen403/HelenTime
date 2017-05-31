@@ -36,14 +36,12 @@ public class AddFragment extends HBaseFragment {
     TextView tvSound;
     TextView remind;
     TextView project;
-
-
-    PullAskView pullAskView;
-
     TextView certain;
     TextView time;
-
     EditText name;
+    TextView auto;
+
+    PullAskView pullAskView;
 
 
     @Override
@@ -60,6 +58,7 @@ public class AddFragment extends HBaseFragment {
         certain = (TextView) contentView.findViewById(R.id.add_certain);
         time = (TextView) contentView.findViewById(R.id.add_time);
         name = (EditText) contentView.findViewById(R.id.add_name);
+        auto = (TextView) contentView.findViewById(R.id.add_auto);
         pullAskView = new PullAskView(getActivity());
     }
 
@@ -70,7 +69,7 @@ public class AddFragment extends HBaseFragment {
 
     @Override
     public void setListeners() {
-        setOnListeners(addPhoto, tvSound, remind, project, certain, time);
+        setOnListeners(addPhoto, tvSound, remind, project, certain, time, auto);
         setOnClick(new onClick() {
             @Override
             public void onClick(View v, int id) {
@@ -93,9 +92,18 @@ public class AddFragment extends HBaseFragment {
                     case R.id.add_time:
                         timePick();
                         break;
+                    case R.id.add_auto:
+                        auto();
+                        break;
+
                 }
             }
         });
+    }
+
+    private void auto() {
+        L("发送");
+        int i = 1 / 0;
     }
 
 

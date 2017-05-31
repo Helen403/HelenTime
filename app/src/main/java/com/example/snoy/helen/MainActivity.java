@@ -37,14 +37,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import HConstants.HConstants;
+import Hreceivert.VMForegroundService;
 import Utils.ControlUtils;
 import bean.MessageEvent;
 import bean.WeatherBean;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
-import receiver.LocalService;
-import receiver.RemoteService;
 
 public class MainActivity extends FragmentActivity {
     //点击返回键
@@ -135,18 +134,52 @@ public class MainActivity extends FragmentActivity {
         mLocationClient.start();
 
 
-        Intent serviceOne = new Intent();
-		serviceOne.setClass(MainActivity.this, LocalService.class);
-		startService(serviceOne);
+//        Intent serviceOne = new Intent();
+//		serviceOne.setClass(MainActivity.this, LocalService.class);
+//		startService(serviceOne);
+//
+//		Intent serviceTwo = new Intent();
+//		serviceTwo.setClass(MainActivity.this, RemoteService.class);
+//		startService(serviceTwo);
 
-		Intent serviceTwo = new Intent();
-		serviceTwo.setClass(MainActivity.this, RemoteService.class);
-		startService(serviceTwo);
-
-
-
+//        Intent foregroundIntent =
+//                new Intent(getApplicationContext(), VMForegroundService.class);
+//        startService(foregroundIntent);
+//        Intent daemonIntent =
+//                new Intent(getApplicationContext(), VMDaemonService.class);
+//        startService(daemonIntent);
+//        Intent backgroundIntent =
+//                new Intent(getApplicationContext(), VMBackgroundService.class);
+//        startService(backgroundIntent);
+//        startJobScheduler();
     }
 
+
+//    /**
+//     * 5.x以上系统启用 JobScheduler API 进行实现守护进程的唤醒操作
+//     */
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    private void startJobScheduler() {
+//        int jobId = 1;
+//        JobInfo.Builder jobInfo =
+//                new JobInfo.Builder(jobId, new ComponentName(this, VMDaemonJobService.class));
+//        jobInfo.setPeriodic(10000);
+//        jobInfo.setPersisted(true);
+//        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+//        jobScheduler.schedule(jobInfo.build());
+//    }
+
+/*
+    */
+
+    /**
+     * 启动核心进程
+     *//*
+
+    private void startCoreProcess() {
+        startService(new Intent(getApplicationContext(), VMCoreService.class));
+    }
+*/
     private void initData() {
         PermissionGen.with(MainActivity.this)
                 .addRequestCode(100)

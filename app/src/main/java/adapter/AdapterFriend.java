@@ -27,6 +27,6 @@ public class AdapterFriend extends HBaseAdapter<ComBean.FriendListBean> {
        // Log.d("Helen",comBean.getClassCode());
         TextView name = holder.findViewById(R.id.friend_name);
 
-        name.setText(comBean.getLsh()+"");
+        name.setText(comBean.getUser().getUserNickName()+"");
     }
 }

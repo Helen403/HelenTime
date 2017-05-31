@@ -41,20 +41,20 @@ public class FileUpLoadService {
                 // ------------------------------------------------------------------------------------
                 String fileContent = convertFileToString(filePath);
                 HashMap<String, String> paramsUpFileMap = new HashMap<String, String>();
-                Log.d("Helen",fileName);
-                paramsUpFileMap.put("fileName", fileName+".amr");
+                Log.d("Helen", fileName);
+                paramsUpFileMap.put("fileName", fileName);
                 paramsUpFileMap.put("content", fileContent);
                 paramsUpFileMap.put("fileType", fileType);
-
+                Log.d("Helen",HConstants.URL.uploadFile);
                 HttpUtils.posts(HConstants.URL.uploadFile, paramsUpFileMap, new HttpUtils.OnHttpUtilsResultListener() {
                     @Override
                     public void onHttpSuccess(String url, String result) {
-
+                        Log.d("Helen", result);
                     }
 
                     @Override
                     public void onHttpFailure(String url) {
-
+                        Log.d("Helen", "失败");
                     }
                 });
 
@@ -81,10 +81,10 @@ public class FileUpLoadService {
                 BASE64Encoder encorder = new BASE64Encoder();
                 // 用Base64将字节流转化为字符流
                 strFileContent = new String(encorder.encode(baos.toByteArray()));
-                //Log.i("转化", "文件转化字符流成功.....");
+                Log.i("Helen", "文件转化字符流成功.....");
                 fis.close();
             } catch (Exception ex) {
-                //Log.i("转化", "文件转化字符流失败.....");
+                Log.i("Helen", "文件转化字符流失败.....");
             }
             return strFileContent;
         }

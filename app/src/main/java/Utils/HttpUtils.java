@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -127,6 +128,9 @@ public final class HttpUtils {
                 }
                 params.deleteCharAt(params.length() - 1);
             }
+           // Log.d("Helen",params+"");
+
+
             URL ul = new URL(url);
             conn = (HttpURLConnection) ul.openConnection();
             conn.setConnectTimeout(5000);

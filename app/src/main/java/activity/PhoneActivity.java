@@ -130,7 +130,6 @@ public class PhoneActivity extends HBaseActivity {
                     //关闭自己
                     finish();
 
-
                 } else {
                     T("登录失败");
                 }

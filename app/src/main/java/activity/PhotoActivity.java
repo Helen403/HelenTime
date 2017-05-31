@@ -5,17 +5,21 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.Button;
 
 import com.example.snoy.helen.R;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import HConstants.HConstants;
 import adapter.AdapterPhoto;
 import base.HBaseActivity;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
+import okhttp3.Call;
 
 /**
  * Created by Helen on 2017/5/24.
@@ -60,7 +64,8 @@ public class PhotoActivity extends HBaseActivity {
 
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK &&
@@ -70,12 +75,46 @@ public class PhotoActivity extends HBaseActivity {
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             }
+
+            L("图片" + photos.get(0));
+//            FileUpLoadService service = new FileUpLoadService(PhotoActivity.this, "Helen.png", photos.get(0), "");
+//            service.upload();
+            File file = new File(photos.get(0));
+//            OkHttpUtils
+//                    .postFile()
+//                    .url("http://192.168.1.131:8080/fileUplod/file/upload2")
+//                    .file(file)
+//                    .build()
+//                    .execute(new MyStringCallback());
+
+            OkHttpUtils.post()//
+                    .addFile("mFile", "messenger_01.png", file)//
+                    .url(HConstants.URL.uploadPhoto)
+                    .build()//
+                    .execute(new MyStringCallback());
+
+
+
             selectedPhotos.clear();
 
             if (photos != null) {
                 selectedPhotos.addAll(photos);
             }
             adapterPhoto.notifyDataSetChanged();
+        }
+    }
+
+    class  MyStringCallback extends StringCallback{
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            L("失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            L(response);
+            L("成功");
         }
     }
 

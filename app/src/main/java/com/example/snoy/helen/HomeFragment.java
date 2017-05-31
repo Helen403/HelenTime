@@ -147,7 +147,7 @@ public class HomeFragment extends HBaseFragment {
     public void refresh(MessageEvent event) {
         UserBean userBean = (UserBean) event.getData();
 
-        //  name.setText(userBean.getUserNickName());
+         //name.setText(userBean.getUserNickName());
     }
 
 

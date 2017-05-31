@@ -42,7 +42,7 @@ import service.FileUpLoadService;
 /**
  * Created by Helen on 2017/5/24.
  */
-public class SoundActivity extends AppCompatActivity {
+public class SoundActivity extends Activity {
 
     static final int VOICE_REQUEST_CODE = 66;
 
@@ -232,7 +232,7 @@ public class SoundActivity extends AppCompatActivity {
         upFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileUpLoadService fileUpLoadService = new FileUpLoadService(SoundActivity.this, "HelenText", path.getText().toString(), "android_audio");
+                FileUpLoadService fileUpLoadService = new FileUpLoadService(SoundActivity.this, "HelenText.amr", path.getText().toString(), "android_audio");
                 fileUpLoadService.upload();
 
             }

@@ -4,17 +4,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,53 +159,53 @@ public final class ControlUtils {
     }
 
 
-    public static <T> List<T> getListFromJson(String s, Class<T[]> clazz) {
-        T[] arr = new Gson().fromJson(s, clazz);
-        return Arrays.asList(arr);
-    }
+//    public static <T> List<T> getListFromJson(String s, Class<T[]> clazz) {
+//        T[] arr = new Gson().fromJson(s, clazz);
+//        return Arrays.asList(arr);
+//    }
 
     /**
      * @param json
      * @param clazz
      * @return
      */
-    public static <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz)
-    {
-        Type type = new TypeToken<ArrayList<JsonObject>>()
-        {}.getType();
-        ArrayList<JsonObject> jsonObjects = new Gson().fromJson(json, type);
-
-        ArrayList<T> arrayList = new ArrayList<>();
-        for (JsonObject jsonObject : jsonObjects)
-        {
-            arrayList.add(new Gson().fromJson(jsonObject, clazz));
-        }
-        return arrayList;
-    }
-
-
+//    public static <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz)
+//    {
+//        Type type = new TypeToken<ArrayList<JsonObject>>()
+//        {}.getType();
+//        ArrayList<JsonObject> jsonObjects = new Gson().fromJson(json, type);
 //
-//    /**
-//     * json转成ArrayList
-//     */
-//    private static <T> ArrayList<T> getListFromJson(String gsonString) {
-//        ArrayList<T> list;
-//        try {
-//            if (gson != null && !TextUtils.isEmpty(gsonString)) {
-//                //过滤gson
-//                gsonString = gsonString.trim();
-//                if (gsonString.startsWith("ufeff")) {
-//                    gsonString = gsonString.substring(1);
-//                }
-//                TypeToken<ArrayList<T>> tt = new TypeToken<ArrayList<T>>() {
-//                };
-//                list = gson.fromJson(gsonString, tt.getType());
-//                return list;
-//            }
-//        } catch (Exception e) {
+//        ArrayList<T> arrayList = new ArrayList<>();
+//        for (JsonObject jsonObject : jsonObjects)
+//        {
+//            arrayList.add(new Gson().fromJson(jsonObject, clazz));
 //        }
-//        return null;
+//        return arrayList;
 //    }
+
+
+
+    /**
+     * json转成ArrayList
+     */
+    public static <T> ArrayList<T> getListFromJson(String gsonString, Class<T> tClass) {
+        ArrayList<T> list;
+        try {
+            if (gson != null && !TextUtils.isEmpty(gsonString)) {
+                //过滤gson
+                gsonString = gsonString.trim();
+                if (gsonString.startsWith("ufeff")) {
+                    gsonString = gsonString.substring(1);
+                }
+                TypeToken<ArrayList<T>> tt = new TypeToken<ArrayList<T>>() {
+                };
+                list = gson.fromJson(gsonString, tt.getType());
+                return list;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
     /**
      * 对象转成Json

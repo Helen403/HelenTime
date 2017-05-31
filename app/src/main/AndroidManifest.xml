@@ -211,6 +211,74 @@
 
 
 
+    <!-- <activity android:name="Hreceivert.VMDaemonActivity"/>-->
+
+
+      <!--  &lt;!&ndash;普通前台进程&ndash;&gt;-->
+       <!-- <service
+            android:name="Hreceivert.VMForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":foreground"/>-->
+-->
+        <!--守护进程-->
+        <!--<service
+            android:name="Hreceivert.VMDaemonService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":daemon"/>
+        <service
+            android:name="Hreceivert.VMDaemonService$DaemonInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":daemon"/>
+
+        &lt;!&ndash;普通后台进程&ndash;&gt;
+        <service
+            android:name="Hreceivert.VMBackgroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":background"/>
+
+        &lt;!&ndash;核心进程&ndash;&gt;
+        <service
+            android:name="Hreceivert.VMCoreService"
+            android:enabled="true"
+            android:exported="false"/>
+        <service
+            android:name="Hreceivert.VMCoreService$CoreInnerService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        &lt;!&ndash;5.x 以上使用 JobService&ndash;&gt;
+        <service
+            android:name="Hreceivert.VMDaemonJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":daemonjob"/>
+-->
+
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent1106092575" />
+                <!-- 100380359 100381104 222222 -->
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
+
 
 
     </application>

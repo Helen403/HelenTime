@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import Utils.HImageUtils;
 import activity.LoginActivity;
 import activity.SetActivity;
 import adapter.AdapterMenu;
@@ -34,9 +35,9 @@ public class MyMenuFragment extends HBaseFragment {
 
     @Override
     public void findViews() {
-        cir = (CircleImageView)contentView.findViewById(R.id.menu_cir);
-        tv1 = (TextView)contentView.findViewById(R.id.tv_1);
-        myListview = (ListView)contentView.findViewById(R.id.my_listview);
+        cir = (CircleImageView) contentView.findViewById(R.id.menu_cir);
+        tv1 = (TextView) contentView.findViewById(R.id.tv_1);
+        myListview = (ListView) contentView.findViewById(R.id.my_listview);
         set = (TextView) contentView.findViewById(R.id.menu_set);
     }
 
@@ -60,7 +61,7 @@ public class MyMenuFragment extends HBaseFragment {
 
     @Override
     public void setListeners() {
-        setOnListeners(cir,set);
+        setOnListeners(cir, set);
         setOnClick(new onClick() {
             @Override
             public void onClick(View v, int id) {
@@ -81,8 +82,10 @@ public class MyMenuFragment extends HBaseFragment {
 
     }
 
-    public void refresh(MessageEvent event){
+    public void refresh(MessageEvent event) {
         UserBean userBean = (UserBean) event.getData();
         tv1.setText(userBean.getUserNickName());
+        HImageUtils.getInstance().setImageByUrl(userBean.getUserHead(), cir);
+
     }
 }

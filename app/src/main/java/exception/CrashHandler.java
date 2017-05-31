@@ -1,109 +1,155 @@
 package exception;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.blankj.utilcode.util.PhoneUtils;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
+import HConstants.HConstants;
+import Utils.TimeUtils;
 import base.HBaseApplication;
+import okhttp3.Call;
 
 /**
  * 捕获全局异常
+ * <p/>
+ * 开启异常捕获
+ * <p/>
+ * ApplicationUtil中CrashHandler.getInstance().init();
  */
 public final class CrashHandler implements Thread.UncaughtExceptionHandler {
-
-    Context context = HBaseApplication.context;
-
-    //定义文件存放路径
-    private static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/project_helen/Exception/";
-
-    //定义文件后缀
-    private static final String FILE_NAME_SUFFIX = ".txt";
-
-    //系统默认的异常处理器
+    // 异常存储路径
+    private static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/project_att/log/";
     private Thread.UncaughtExceptionHandler defaultCrashHandler;
-
-    private static final String TAG = "Helen";
-
     private static CrashHandler crashHandler = new CrashHandler();
 
-    //私有化构造函数
     private CrashHandler() {
     }
 
-    //获取实例
     public static CrashHandler getInstance() {
         return crashHandler;
     }
 
     public void init() {
         defaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
-        //设置系统的默认异常处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        //PgyCrashManager.reportCaughtException(context, new RuntimeException(throwable));
-        //记录异常信息到本地文本中
         dumpExceptionToSDCard(throwable);
         if (defaultCrashHandler != null) {
-            //如果在自定义异常处理器之前，系统有自己的默认异常处理器的话，调用它来处理异常信息
             defaultCrashHandler.uncaughtException(thread, throwable);
         } else {
             Process.killProcess(Process.myPid());
         }
     }
 
-    //记录异常信息到本地文本中
+    // 异常信息的处理
     private void dumpExceptionToSDCard(Throwable throwable) {
-        //如果SD卡非正常挂载，则用Log输出异常信息
+        Toast.makeText(HBaseApplication.context, "请反馈崩溃操作，我们会在下次更新中修复！", Toast.LENGTH_LONG).show();
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Log.e(TAG, "SD卡出错");
+            Log.e("异常捕获", "设备没有SD卡");
             return;
         }
         File dir = new File(PATH);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        long currentTime = System.currentTimeMillis();
-        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(currentTime));
-        //建立记录Crash信息的文本
-        File file = new File(PATH + time + FILE_NAME_SUFFIX);
+        String deviceName = PhoneUtils.getPhoneType() + "";
+        String networkOperatorName = PhoneUtils.getSimOperatorName();
+        String errorInfo = exceptionToString(throwable);
+        String fileName = deviceName + "_" + System.currentTimeMillis() + ".txt";
+        File file = new File(PATH + fileName);
         try {
             PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-            printWriter.println(time);
+            printWriter.println(TimeUtils.getCurrentTime());
             dumpPhoneInfo(printWriter);
             printWriter.println();
             throwable.printStackTrace(printWriter);
             printWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, "记录Crash信息失败");
+            Log.e("异常捕获", "保存异常信息的设备出错");
+        } finally {
+//			CrashUpLoadService uploadService = new CrashUpLoadService(fileName, PATH + fileName, "syserror", deviceName,
+//					networkOperatorName, errorInfo);
+//			uploadService.upload();
+            Log.d("Helen","异常");
+            OkHttpUtils.post()//
+                    .addFile("mFile", fileName, file)//
+                    .url(HConstants.URL.uploadPhoto)
+                    .build()//
+                    .execute(new MyStringCallback());
+
         }
     }
 
-    //记录手机信息
+    /**
+     * 将异常信息转化成字符串
+     *
+     * @param t
+     * @return
+     * @throws IOException
+     */
+    private static String exceptionToString(Throwable t) {
+        String error = "";
+        try {
+            if (t == null)
+                return null;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                t.printStackTrace(new PrintStream(baos));
+            } finally {
+                baos.close();
+            }
+            error = baos.toString();
+        } catch (Exception ex) {
+        }
+        return error;
+    }
+
+    // 输出设备信息
     private void dumpPhoneInfo(PrintWriter printWriter) {
-        //系统版本号
+        // 设备的版本信息
         printWriter.print("OS Version:");
         printWriter.print(Build.VERSION.RELEASE);
         printWriter.print("_");
         printWriter.println(Build.VERSION.SDK_INT);
-        //硬件制造商
+        // 设备的型号
         printWriter.print("Vendor:");
         printWriter.println(Build.MANUFACTURER);
-        //系统定制商
+        // 设备名称
         printWriter.print("Brand:");
         printWriter.println(Build.BRAND);
     }
+
+
+    class MyStringCallback extends StringCallback {
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            Log.d("Helen", "失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.d("Helen", "成功");
+        }
+    }
+
 
 }
