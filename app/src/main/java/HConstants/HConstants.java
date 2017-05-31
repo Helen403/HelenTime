@@ -4,6 +4,7 @@ package HConstants;
  * Created by SNOY on 2017/5/13.
  */
 public interface HConstants {
+
     String url = "http://192.168.1.131:8080/timeLang/";
     String url_man = "http://192.168.1.188:8080/timeLang/";
 
