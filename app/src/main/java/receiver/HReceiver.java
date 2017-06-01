@@ -11,14 +11,15 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.util.HashMap;
 import java.util.List;
 
 import HConstants.HConstants;
 import Utils.DButils;
-import Utils.HttpUtils;
 import activity.RemindActivity;
+import okhttp3.Call;
 
 /**
  * Created by Helen on 2017/5/25.
@@ -48,9 +49,11 @@ public class HReceiver extends PushMessageReceiver {
         } else if (!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount = message.getUserAccount();
         }
+        Toast.makeText(context,"66666",Toast.LENGTH_SHORT).show();
 
-
-
+        Intent intent = new Intent(context, RemindActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
 
     }
 
@@ -65,13 +68,13 @@ public class HReceiver extends PushMessageReceiver {
         } else if (!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount = message.getUserAccount();
         }
-        Log.d("Helen","用来接收服务器发来的通知栏消息（用户点击通知栏时触发）");
+        Log.d("Helen", "用来接收服务器发来的通知栏消息（用户点击通知栏时触发）");
 
-        Log.d("Helen","用来接收服务器发送的透传消息");
+        Log.d("Helen", "用来接收服务器发送的透传消息");
         Intent intent = new Intent(context, RemindActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-        Log.d("Helen","666");
+        Log.d("Helen", "666");
 
     }
 
@@ -87,17 +90,16 @@ public class HReceiver extends PushMessageReceiver {
         } else if (!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount = message.getUserAccount();
         }
-        Log.d("Helen","用来接收服务器发来的通知栏消息（消息到达客户端时触发，并且可以接收应用在前台时不弹出通知的通知消息）");
+        Log.d("Helen", "用来接收服务器发来的通知栏消息（消息到达客户端时触发，并且可以接收应用在前台时不弹出通知的通知消息）");
 
-        Log.d("Helen","用来接收服务器发来的通知栏消息");
+        Log.d("Helen", "用来接收服务器发来的通知栏消息");
         Intent intent = new Intent(context, RemindActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         Log.d("Helen", "666");
 
 
-        Toast.makeText(context,"接受到",Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(context, "接受到", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -137,7 +139,7 @@ public class HReceiver extends PushMessageReceiver {
             }
         }
 
-        Log.d("Helen","用来接收客户端向服务器发送命令消息后返回的响应");
+        Log.d("Helen", "用来接收客户端向服务器发送命令消息后返回的响应");
 
     }
 
@@ -156,24 +158,26 @@ public class HReceiver extends PushMessageReceiver {
         }
         Log.d("Helen", "用来接受客户端向服务器发送注册命令消息后返回的响应。");
 
-      if (DButils.get(HConstants.KEY.RegId)==null||!DButils.get(HConstants.KEY.RegId).equals(mRegId)) {
-          HashMap<String,String> map = new HashMap<>();
-          map.put("userCode","4");
-          map.put("regId",mRegId);
-          Log.d("Helen", "执行");
-          HttpUtils.gets(HConstants.URL.updateRegId, map, new HttpUtils.OnHttpUtilsResultListener() {
-              @Override
-              public void onHttpSuccess(String url, String result) {
+        if (DButils.get(HConstants.KEY.RegId) == null || !DButils.get(HConstants.KEY.RegId).equals(mRegId)) {
+            OkHttpUtils
+                    .get()
+                    .url(HConstants.URL.updateRegId)
+                    .addParams("userCode", "4")
+                    .addParams("regId", mRegId)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
 
-              }
+                        }
 
-              @Override
-              public void onHttpFailure(String url) {
+                        @Override
+                        public void onResponse(String response, int id) {
 
-              }
-          });
-          DButils.put("HConstants.KEY.RegId",mRegId);
-      }
+                        }
+                    });
+            DButils.put("HConstants.KEY.RegId", mRegId);
+        }
 
     }
 }

@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import base.HBaseApplication;
+import okhttp3.Call;
 
 
 /**
@@ -182,7 +185,6 @@ public final class ControlUtils {
 //        }
 //        return arrayList;
 //    }
-
 
 
     /**
@@ -372,18 +374,50 @@ public final class ControlUtils {
     /**
      * get请求数据并转化
      */
-    public static <T> void getsEveryTime(String url, HashMap<String, String> map, final Class<T> cls, final OnControlUtils<T> onControlUtils) {
-        HttpUtils.gets(url, map, new HttpUtils.OnHttpUtilsResultListener() {
+    public static <T> void getsEveryTime(final String url, HashMap<String, String> map, final Class<T> cls, final OnControlUtils<T> onControlUtils) {
+        String urlTmp = appendString(url, map);
+        OkHttpUtils
+                .get()
+                .url(urlTmp).build().execute(new StringCallback() {
             @Override
-            public void onHttpSuccess(String url, String result) {
-                onSuccess(url, cls, onControlUtils, result);
+            public void onError(Call call, Exception e, int id) {
+                onFailure(url, onControlUtils);
             }
 
             @Override
-            public void onHttpFailure(String url) {
-                onFailure(url, onControlUtils);
+            public void onResponse(String response, int id) {
+                onSuccess(url, cls, onControlUtils, response);
             }
         });
+//        HttpUtils.gets(url, map, new HttpUtils.OnHttpUtilsResultListener() {
+//            @Override
+//            public void onHttpSuccess(String url, String result) {
+//                onSuccess(url, cls, onControlUtils, result);
+//            }
+//
+//            @Override
+//            public void onHttpFailure(String url) {
+//                onFailure(url, onControlUtils);
+//            }
+//        });
+    }
+
+
+    public static String appendString(String url, HashMap<String, String> map) {
+        StringBuilder urlTmp = new StringBuilder();
+        urlTmp.append(url);
+        if (map != null && map.size() > 0) {
+            StringBuilder params = new StringBuilder();
+            params.append("?");
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                Object key = entry.getKey();
+                Object val = entry.getValue();
+                params.append(key).append("=").append(val).append("&");
+            }
+            params.deleteCharAt(params.length() - 1);
+            urlTmp.append(params);
+        }
+        return urlTmp.toString();
     }
 
 

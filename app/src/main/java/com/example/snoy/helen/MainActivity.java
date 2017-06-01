@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -37,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import HConstants.HConstants;
-import Hreceivert.VMForegroundService;
 import Utils.ControlUtils;
 import bean.MessageEvent;
 import bean.WeatherBean;
@@ -142,55 +143,24 @@ public class MainActivity extends FragmentActivity {
 //		serviceTwo.setClass(MainActivity.this, RemoteService.class);
 //		startService(serviceTwo);
 
-//        Intent foregroundIntent =
-//                new Intent(getApplicationContext(), VMForegroundService.class);
-//        startService(foregroundIntent);
-//        Intent daemonIntent =
-//                new Intent(getApplicationContext(), VMDaemonService.class);
-//        startService(daemonIntent);
-//        Intent backgroundIntent =
-//                new Intent(getApplicationContext(), VMBackgroundService.class);
-//        startService(backgroundIntent);
-//        startJobScheduler();
+
+        PushManager.startWork(getApplicationContext(),
+                PushConstants.LOGIN_TYPE_API_KEY,
+                "4VGgG8uG1DvuWSSlu3Kk8pMV");
+
     }
 
-
-//    /**
-//     * 5.x以上系统启用 JobScheduler API 进行实现守护进程的唤醒操作
-//     */
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    private void startJobScheduler() {
-//        int jobId = 1;
-//        JobInfo.Builder jobInfo =
-//                new JobInfo.Builder(jobId, new ComponentName(this, VMDaemonJobService.class));
-//        jobInfo.setPeriodic(10000);
-//        jobInfo.setPersisted(true);
-//        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-//        jobScheduler.schedule(jobInfo.build());
-//    }
-
-/*
-    */
-
-    /**
-     * 启动核心进程
-     *//*
-
-    private void startCoreProcess() {
-        startService(new Intent(getApplicationContext(), VMCoreService.class));
-    }
-*/
     private void initData() {
-        PermissionGen.with(MainActivity.this)
-                .addRequestCode(100)
-                .permissions(
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                .request();
+//        PermissionGen.with(MainActivity.this)
+//                .addRequestCode(100)
+//                .permissions(
+//                        Manifest.permission.READ_PHONE_STATE,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                )
+//                .request();
     }
 
     /**
@@ -414,7 +384,8 @@ public class MainActivity extends FragmentActivity {
             }
 
             Log.i("BaiduLocationApiDem", sb.toString());
-            mLocationClient.stop();
+            if (mLocationClient != null)
+                mLocationClient.stop();
 
             weather();
 
@@ -449,19 +420,19 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+          PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
 
     @PermissionSuccess(requestCode = 100)
     public void openContact() {
-        Toast.makeText(this, "Contact permission is granted", Toast.LENGTH_SHORT).show();
-        mLocationClient.start();
+          Toast.makeText(this, "Contact permission is granted", Toast.LENGTH_SHORT).show();
+          mLocationClient.start();
     }
 
     @PermissionFail(requestCode = 100)
     public void failContact() {
-        Toast.makeText(this, "Contact permission is not granted", Toast.LENGTH_SHORT).show();
+         Toast.makeText(this, "Contact permission is not granted", Toast.LENGTH_SHORT).show();
     }
 
 

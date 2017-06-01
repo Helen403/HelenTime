@@ -63,7 +63,7 @@
 
     <permission
         android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.example.snoy.helen"
-        android:protectionLevel="normal"></permission>
+        android:protectionLevel="normal"/>
 
 
     <permission
@@ -72,6 +72,12 @@
     <!--这里com.xiaomi.mipushdemo改成app的包名-->
     <uses-permission android:name="com.example.snoy.helen.permission.MIPUSH_RECEIVE" />
     <!--这里com.xiaomi.mipushdemo改成app的包名-->
+
+
+
+
+
+
 
 
     <application
@@ -122,7 +128,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote"/>
 
 
 
@@ -211,55 +217,6 @@
 
 
 
-    <!-- <activity android:name="Hreceivert.VMDaemonActivity"/>-->
-
-
-      <!--  &lt;!&ndash;普通前台进程&ndash;&gt;-->
-       <!-- <service
-            android:name="Hreceivert.VMForegroundService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":foreground"/>-->
--->
-        <!--守护进程-->
-        <!--<service
-            android:name="Hreceivert.VMDaemonService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":daemon"/>
-        <service
-            android:name="Hreceivert.VMDaemonService$DaemonInnerService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":daemon"/>
-
-        &lt;!&ndash;普通后台进程&ndash;&gt;
-        <service
-            android:name="Hreceivert.VMBackgroundService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":background"/>
-
-        &lt;!&ndash;核心进程&ndash;&gt;
-        <service
-            android:name="Hreceivert.VMCoreService"
-            android:enabled="true"
-            android:exported="false"/>
-        <service
-            android:name="Hreceivert.VMCoreService$CoreInnerService"
-            android:enabled="true"
-            android:exported="false"/>
-
-        &lt;!&ndash;5.x 以上使用 JobService&ndash;&gt;
-        <service
-            android:name="Hreceivert.VMDaemonJobService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":daemonjob"/>
--->
-
-
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -278,6 +235,80 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="orientation|keyboardHidden">
         </activity>
+
+
+
+
+
+
+
+        <!-- push应用定义消息receiver声明 -->
+        <receiver android:name="receiver.MyPushMessageReceiver">
+            <intent-filter>
+
+                <!-- 接收push消息 -->
+                <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
+                <!-- 接收bind,unbind,fetch,delete等反馈消息 -->
+                <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- push必须的receviver和service声明 -->
+        <receiver
+            android:name="com.baidu.android.pushservice.PushServiceReceiver"
+            android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
+                <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
+                <!-- 以下四项为可选的action声明，可大大提高service存活率和消息到达速度 -->
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.baidu.android.pushservice.RegistrationReceiver"
+            android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.METHOD" />
+                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.baidu.android.pushservice.PushService"
+            android:exported="true"
+            android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.baidu.android.pushservice.CommandService"
+            android:exported="true" />
+
+        <!-- 适配Android N系统必需的ContentProvider声明，写权限包含应用包名-->
+        <provider
+            android:name="com.baidu.android.pushservice.PushInfoProvider"
+            android:authorities="com.baidu.push.example.bdpush"
+            android:exported="true"
+            android:protectionLevel="signature"
+            android:writePermission="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.baidu.push.example" />
+
+        <!-- 在百度开发者中心查询应用的API Key -->
+        <meta-data
+            android:name="api_key"
+            android:value="4VGgG8uG1DvuWSSlu3Kk8pMV" />
+
 
 
 

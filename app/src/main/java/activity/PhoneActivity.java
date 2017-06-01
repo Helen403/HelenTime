@@ -82,18 +82,19 @@ public class PhoneActivity extends HBaseActivity {
             public void onClick(View v, int id) {
                 switch (id) {
                     case R.id.phone_close:
-                        finish();
+                        close();
+
                         break;
                     case R.id.phone_pwd_v:
                         pwd();
                         break;
                     case R.id.phone_register:
-                        bindPhoneView.setType(0);
-                        bindPhoneView.setVisibility(View.VISIBLE);
+                        register();
+
                         break;
                     case R.id.phone_forget:
-                        bindPhoneView.setType(1);
-                        bindPhoneView.setVisibility(View.VISIBLE);
+                        forget();
+
                         break;
                     case R.id.phone_login:
                         login();
@@ -101,6 +102,21 @@ public class PhoneActivity extends HBaseActivity {
                 }
             }
         });
+    }
+
+    private void forget() {
+        bindPhoneView.setType(1);
+        bindPhoneView.setVisibility(View.VISIBLE);
+    }
+
+    private void register() {
+
+        bindPhoneView.setType(0);
+        bindPhoneView.setVisibility(View.VISIBLE);
+    }
+
+    private void close() {
+        finish();
     }
 
     public void login() {
@@ -117,11 +133,11 @@ public class PhoneActivity extends HBaseActivity {
 
         ControlUtils.getsEveryTime(HConstants.URL.LOGIN, map, UserBean.class, new ControlUtils.OnControlUtils<UserBean>() {
             @Override
-            public void onSuccess(String url, UserBean userBean,  String result) {
+            public void onSuccess(String url, UserBean userBean, String result) {
                 L(result);
                 T("登录成功");
                 if (userBean.getIsCheck() == 0) {
-                    DButils.put(HConstants.KEY.UserId,userBean.getUserID());
+                    DButils.put(HConstants.KEY.UserId, userBean.getUserID());
 
                     //发一个消息给HomeFragment 替换 名字
                     onSendMessage(new MessageEvent(HConstants.EVENT.HOMEREFRESH, userBean));

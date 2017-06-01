@@ -75,9 +75,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     //树View
     //compile 'com.github.TellH:RecyclerTreeView:1.2.0'
-
-
-        //工具类
+    //工具类
     compile 'com.blankj:utilcode:1.5.1'
     //第三方
     compile files('libs/BaiduLBS_Android.jar')
@@ -101,5 +99,5 @@ dependencies {
     compile files('libs/BASE64.jar')
     //okhttp-utils
     compile 'com.zhy:okhttputils:2.6.2'
-
+    compile files('libs/pushservice-5.7.0.95.jar')
 }

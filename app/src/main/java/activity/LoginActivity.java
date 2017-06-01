@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.PhoneUtils;
 import com.example.snoy.helen.R;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
@@ -17,10 +19,14 @@ import com.tencent.tauth.UiError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import HConstants.HConstants;
+import Utils.ControlUtils;
 import Utils.DButils;
 import base.HBaseActivity;
 import bean.MessageEvent;
+import bean.ResultBean;
 import bean.UserBean;
 
 
@@ -41,6 +47,7 @@ public class LoginActivity extends HBaseActivity {
     private QQLoginListener mListener;
     private UserInfo mInfo;
     private String name, figureurl, city, gender;
+    private String openID;
 
 
     @Override
@@ -64,6 +71,7 @@ public class LoginActivity extends HBaseActivity {
     @Override
     public void initData() {
         initQQ();
+
     }
 
 
@@ -159,6 +167,7 @@ public class LoginActivity extends HBaseActivity {
             String expires = jb.getString("expires_in");
 
             DButils.put(HConstants.KEY.QQopenid, openID);
+            this.openID = openID;
 
 
             mTencent.setOpenId(openID);
@@ -190,9 +199,6 @@ public class LoginActivity extends HBaseActivity {
                     gender = jb.getString("gender");
                     DButils.put(HConstants.KEY.QQgender, gender);
 
-                    //nickName.setText(name);
-
-                    //  Picasso.with(MainActivity.this).load(figureurl).into(figure);
                     //退出登录页面 设置数据
                     finishA();
 
@@ -220,7 +226,41 @@ public class LoginActivity extends HBaseActivity {
     private void finishA() {
 
 
+        HashMap<String, String> map = new HashMap<>();
+        map.put("phoneDeviceCode", PhoneUtils.getIMEI());
+        map.put("phoneDeviceName", DeviceUtils.getManufacturer() + " " + DeviceUtils.getModel());
+        map.put("isThreeLogin", 1 + "");
+        map.put("threeLoginType", "QQ");
+        map.put("threeLoginID", openID);
+        map.put("sex", gender);
 
+        L(DButils.get(HConstants.KEY.UserId));
+        if (DButils.get(HConstants.KEY.UserId) != null) {
+            map.put("useCode", DButils.get(HConstants.KEY.UserId));
+        }else {
+            map.put("useCode","");
+        }
+
+        L(PhoneUtils.getPhoneType() + "");
+
+
+        ControlUtils.getsEveryTime(HConstants.URL.saveUser, map, ResultBean.class, new ControlUtils.OnControlUtils<ResultBean>() {
+            @Override
+            public void onSuccess(String url, ResultBean resultBean, String result) {
+                L(result);
+                if (resultBean.result.equals("1")) {
+                    L("登录成功");
+                } else {
+                    L("登录失败");
+                }
+
+            }
+
+            @Override
+            public void onFailure(String url) {
+                L("网络失败");
+            }
+        });
 
         UserBean userBean = new UserBean();
         userBean.setUserNickName(name);

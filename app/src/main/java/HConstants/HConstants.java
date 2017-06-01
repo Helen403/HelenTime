@@ -40,6 +40,9 @@ public interface HConstants {
         String uploadPhoto = url + "uploadPicFile";
 
 
+        String saveUser = url + "saveUser";
+
+
     }
 
     interface KEY {
@@ -50,5 +53,7 @@ public interface HConstants {
         String QQgender = "QQgender";
         String QQcity = "QQcity";
         String QQopenid = "QQopenid";
+
+
     }
 }

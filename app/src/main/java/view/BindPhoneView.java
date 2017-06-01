@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.PhoneUtils;
 import com.example.snoy.helen.R;
 
@@ -171,7 +172,7 @@ public class BindPhoneView extends HBaseView {
         map.put("userTelphone",registerPhone.getText().toString());
         map.put("userPassword",registerPwd.getText().toString());
         map.put("phoneDeviceCode", PhoneUtils.getIMEI());
-        map.put("phoneDeviceName",PhoneUtils.getPhoneType()+"");
+        map.put("phoneDeviceName", DeviceUtils.getManufacturer()+" "+DeviceUtils.getModel());
         map.put("isThreeLogin", "0");
 
         ControlUtils.getsEveryTime(HConstants.URL.Register, map, ResultBean.class, new ControlUtils.OnControlUtils<ResultBean>() {
